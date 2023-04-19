@@ -1,0 +1,20 @@
+﻿<Window x:Class="wp04_layout.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:wp04_layout"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="500">
+    <StackPanel>
+        <!--Canvas는 부모컨트롤이 제어 못함-->
+        <!--화면사이즈에 맞추기 위해서 Grid사용함. Canvas는 컨트롤 못해서 잘안씀-->
+        <Canvas Width="50" Height="50" Background="LightBlue">
+            <Button Width="150" Content="안녕하세요 버튼입니다" Margin="5"/>
+        </Canvas>
+        <!--Grid는 자식컨트롤이 부모컨트롤에 큰 영향을 받기에 Grid에서 제어가능함-->
+        <Grid Width="50" Height="50" Background="LightBlue">
+            <Button Width="150" Content="안녕하세요 버튼입니다" Margin="5"/>
+        </Grid>
+    </StackPanel>
+</Window>

@@ -17,5 +17,6 @@
 
         <Image Source="Resources/xaml.png" Width="32" Height="32" />
         <MediaElement Source="Resources/video.mp4" Width="180" Height="100" LoadedBehavior="Play" />
+        <!--x:Name="MediaPlayer"-->
     </StackPanel>
 </Window>
