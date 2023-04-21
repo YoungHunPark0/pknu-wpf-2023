@@ -1,6 +1,7 @@
 # pknu-wpf-2023
 부경대 IoT 시스템개발자 WPF(데스크탑 앱 개발) 리포지토리
-WPF : Windows Presentation Foundation
+
+# WPF : Windows Presentation Foundation
 
 ## 1일차
 - WPF 기초
@@ -25,6 +26,8 @@ WPF : Windows Presentation Foundation
 	- MahApps.Metro 디자인 적용
 	- MVVM 패턴
 	- 데이터바인딩 DB연동
-	
+
+4일차 MVVM View
+
 <img
 src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/wpf01.png" width="700">
