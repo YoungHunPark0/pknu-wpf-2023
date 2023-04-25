@@ -31,9 +31,25 @@
 
 <img
 src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/wpf01.png" width="700">
+<img
+src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/wpf02.gif" width="700">
 
 ## 5일차
 - WPF 응용
 	- MVVM 패턴
 	- MVVM framework / Caliburn
 	- 데이터바인딩 DB연동
+	
+## 6일차
+- WPF 응용
+	- 영화검색앱
+		- TMDB OpenAPI
+		- MahApps.Metro
+		- MahApps.Metro.IconPacks
+		- Newtonsoft.Json
+<!-- https://api.themoviedb.org/3/search/movie?api_key=4aa05db6c87f2da3b20150caf335a735&language=ko-KR&page=1&include_adult=false&query=%EC%9D%B8%ED%84%B0%EC%8A%A4%ED%85%94%EB%9D%BC -->
+	
+6일차 영화검색앱 중간
+
+<img
+src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/wpf03.png" width="700">
