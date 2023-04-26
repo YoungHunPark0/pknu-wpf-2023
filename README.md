@@ -53,3 +53,15 @@ src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/w
 
 <img
 src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/wpf03.png" width="700">
+
+## 7일차
+- WPF 응용
+	- 영화검색앱
+		- 화면정리
+		- CefSharp.Wpf
+		- youtube OpenAPI
+		- DB 데이터바인딩
+
+7일차 영화검색앱 완료
+<img
+src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/wpf04.png" width="700">
