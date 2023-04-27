@@ -25,6 +25,7 @@
             <RowDefinition Height="60"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="80"/>
+            <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Grid.Column="0">
@@ -109,7 +110,7 @@
             </Button>
 
             <Button x:Name="BtnViewFavorite" Content="즐겨찾기 보기" Margin="5, 20" FontSize="12"
-                    Style="{StaticResource MahApps.Styles.Button.Square.Highlight}">
+                    Style="{StaticResource MahApps.Styles.Button.Square.Highlight}" Click="BtnViewFavorite_Click">
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -121,7 +122,7 @@
             </Button>
 
             <Button x:Name="BtnDelFavorite" Content="즐겨찾기 삭제" Margin="5, 20" FontSize="12"
-                    Style="{StaticResource MahApps.Styles.Button.Square}">
+                    Style="{StaticResource MahApps.Styles.Button.Square}" Click="BtnDelFavorite_Click">
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -157,5 +158,11 @@
                 </Button.ContentTemplate>
             </Button>-->
         </StackPanel>
+
+        <StatusBar Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="-10">
+            <StatusBarItem Content="Tmdb &amp; Youtube OpenAPI App"/>
+            <Separator Style="{StaticResource MahApps.Styles.Separator.StatusBar}"/>
+            <StatusBarItem x:Name="StsResult"/>
+        </StatusBar>
     </Grid>
 </mah:MetroWindow>
