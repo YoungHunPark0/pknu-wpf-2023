@@ -73,5 +73,19 @@ src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/w
 
 영화검색앱 
 <img
-src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/wpf05.png" width="700">
-	
+src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/wpf05.gif" width="700">
+
+미세먼지확인 앱 중간
+<img
+src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/wpf06.png" width="700">
+
+## 9일차
+- WPF 응용
+	- 미세먼지확인 앱 완료
+		- MahApps.Metro
+		- 데이터포털 OpenAPI
+		- DB 데이터바인딩(MySQL)
+	- 개인 포트폴리오 개발방식
+		- 데이터포털 OpenAPI
+		- 네이버, 카카오 OpenAPI
+		- 기타 OpenAPI
