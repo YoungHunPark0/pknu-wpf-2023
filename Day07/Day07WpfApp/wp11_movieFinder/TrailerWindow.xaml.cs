@@ -61,7 +61,7 @@ namespace wp11_movieFinder
             var youtubeService = new YouTubeService(
                 new BaseClientService.Initializer()
                 {
-                    ApiKey = "AIzaSyDCvCli5fAQBzx7Qz68rjUUx7wB1ZYFbU4",
+                    ApiKey = "my youtube키",
                     ApplicationName = this.GetType().ToString()
                 });
 

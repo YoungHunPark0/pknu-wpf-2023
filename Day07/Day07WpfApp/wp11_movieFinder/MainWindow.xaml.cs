@@ -66,7 +66,7 @@ namespace wp11_movieFinder
         // 텍스트박스에서 키를 입력할때 엔터를 누르면 검색시작
         private void TxtMovieName_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter) 
+            if (e.Key == Key.Enter)
             {
                 BtnSearchMovie_Click(sender, e);
             }
@@ -75,7 +75,7 @@ namespace wp11_movieFinder
         // 실제 검색메서드
         public async void SearchMovie(string movieName)
         {
-            string tmdb_apiKey = "4aa05db6c87f2da3b20150caf335a735";
+            string tmdb_apiKey = "tmdb키 입력";
             string encoding_movieName = HttpUtility.UrlEncode(movieName, Encoding.UTF8);
             string openApiUrl = $@"https://api.themoviedb.org/3/search/movie?api_key={tmdb_apiKey}" +
                                 $"&language=ko-KR&page=1&include_adult=false&query={encoding_movieName}"; // 검색URL
@@ -112,13 +112,13 @@ namespace wp11_movieFinder
             var total = Convert.ToInt32(jsonResult["total_results"]); // 전체 검색결과 수
 
             // Commons.ShowMessageAsync("검색결과", total.ToString());
-            
+
             var items = jsonResult["results"];
             // items를 데이터그리드에 표시
             var json_array = items as JArray;
 
             var movieItems = new List<MovieItem>(); // json에서 넘어온 배열을 담을 장소
-            foreach (var val in json_array) 
+            foreach (var val in json_array)
             {
                 var MovieItem = new MovieItem()
                 {
@@ -129,9 +129,9 @@ namespace wp11_movieFinder
                     Overview = Convert.ToString(val["overview"]),
                     Popularity = Convert.ToDouble(val["popularity"]),
                     Title = Convert.ToString(val["title"]),
-                    Poster_Path = Convert.ToString(val["poster_path"]) ,                  
+                    Poster_Path = Convert.ToString(val["poster_path"]),
                     Release_Date = Convert.ToString(val["release_date"]),
-                    Vote_Average = Convert.ToDouble(val["vote_average"])                 
+                    Vote_Average = Convert.ToDouble(val["vote_average"])
                 };
                 movieItems.Add(MovieItem);
             }
@@ -164,7 +164,7 @@ namespace wp11_movieFinder
                     posterPath = movie.Poster_Path;
                 }
 
-                
+
                 Debug.WriteLine(posterPath);
                 if (string.IsNullOrEmpty(posterPath)) // 포스터 이미지가 없으면 No_Picture가 나오게
                 {
@@ -176,13 +176,13 @@ namespace wp11_movieFinder
                     ImgPoster.Source = new BitmapImage(new Uri($"{base_url}{posterPath}", UriKind.RelativeOrAbsolute));
                 }
             }
-            catch             
+            catch
             {
                 await Commons.ShowMessageAsync("오류", $"이미지로드 오류발생");
             }
         }
 
-        
+
         private async void BtnWatchTrailer_Click(object sender, RoutedEventArgs e)
         {
             if (GrdResult.SelectedItems.Count == 0)
@@ -254,7 +254,7 @@ namespace wp11_movieFinder
 
                 list.Add(favoriteMovie);
             }*/
-            
+
 
             #region < MySQL 테스트 >
             //try
@@ -353,7 +353,7 @@ namespace wp11_movieFinder
                                                , @Poster_Path
                                                , @Overview 
                                                , @Reg_Date )";
-                    
+
                     var insRes = 0;
                     foreach (MovieItem item in GrdResult.SelectedItems) // SelectedItems가 검색된결과여서 favoritemovieitem 하면 안됨
                                                                         // openAPI로 조회된 결과라서 MovieItem
@@ -374,7 +374,7 @@ namespace wp11_movieFinder
                         insRes += cmd.ExecuteNonQuery();
                     }
 
-                    if (GrdResult.SelectedItems.Count == insRes) 
+                    if (GrdResult.SelectedItems.Count == insRes)
                     {
                         await Commons.ShowMessageAsync("저장", "DB저장성공");
                         StsResult.Content = $"즐겨찾기 {insRes} 건 조회완료"; // 즐겨찾기 추가시 즐겨찾기 추거건수 조회나옴
@@ -395,12 +395,12 @@ namespace wp11_movieFinder
         private async void BtnViewFavorite_Click(object sender, RoutedEventArgs e)
         {
             this.DataContext = null;
-            TxtMovieName.Text= string.Empty;
+            TxtMovieName.Text = string.Empty;
 
             List<FavoriteMovieItem> list = new List<FavoriteMovieItem>();
             try
             {
-                using (SqlConnection conn = new SqlConnection(Commons.connString)) 
+                using (SqlConnection conn = new SqlConnection(Commons.connString))
                 {
                     if (conn.State == ConnectionState.Closed) conn.Open();
 
@@ -454,13 +454,13 @@ namespace wp11_movieFinder
         // 즐겨찾기 삭제
         private async void BtnDelFavorite_Click(object sender, RoutedEventArgs e)
         {
-            if (isFavorite == false) 
+            if (isFavorite == false)
             {
                 await Commons.ShowMessageAsync("오류", "즐겨찾기만 삭제할 수 있습니다.");
                 return;
             }
 
-            if (GrdResult.SelectedItems.Count == 0) 
+            if (GrdResult.SelectedItems.Count == 0)
             {
                 await Commons.ShowMessageAsync("오류", "삭제할 영화를 선택하세요.");
                 return;
@@ -475,7 +475,7 @@ namespace wp11_movieFinder
                     var query = "DELETE FROM FavoriteMovieItem WHERE Id = @Id";
                     var delRes = 0;
 
-                    foreach (FavoriteMovieItem item in GrdResult.SelectedItems) 
+                    foreach (FavoriteMovieItem item in GrdResult.SelectedItems)
                     {
                         SqlCommand cmd = new SqlCommand(query, conn);
                         cmd.Parameters.AddWithValue("@Id", item.Id);
@@ -483,12 +483,12 @@ namespace wp11_movieFinder
                         delRes += cmd.ExecuteNonQuery();
                     }
 
-                    if (delRes == GrdResult.SelectedItems.Count) 
+                    if (delRes == GrdResult.SelectedItems.Count)
                     {
                         await Commons.ShowMessageAsync("삭제", "DB삭제성공!!");
                         StsResult.Content = $"즐겨찾기 {delRes} 건 삭제완료"; // 화면에 안나옴. 어차피 삭제시 바로 조회해서
                     }
-                    else 
+                    else
                     {
                         await Commons.ShowMessageAsync("삭제", "DB삭제 일부성공!!"); // 발생할일이 거의 전무
                     }
