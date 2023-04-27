@@ -72,10 +72,12 @@ src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/w
 		- DB 데이터바인딩(MySQL)
 
 영화검색앱 
+
 <img
 src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/wpf05.gif" width="700">
 
 미세먼지확인 앱 중간
+
 <img
 src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/wpf06.png" width="700">
 
