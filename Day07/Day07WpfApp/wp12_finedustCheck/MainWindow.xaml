@@ -41,7 +41,7 @@
         </Grid>
 
         <DataGrid Grid.Row="1" x:Name="GrdResult" Style="{StaticResource MahApps.Styles.DataGrid.Azure}" Margin="10"
-                  ItemsSource="{Binding}"></DataGrid>
+                  IsReadOnly="True" ItemsSource="{Binding}" MouseDoubleClick="GrdResult_MouseDoubleClick"></DataGrid>
 
         <StatusBar Grid.Row="2">
             <StatusBarItem Content="김해시 미세먼지앱"/>
