@@ -29,7 +29,8 @@ namespace wp13_portfolio.Models
         "child_cash_fare": "300",
         "gugun": "연제구",
         "reference_date": "2022-12-31" */
-        public int Id { get; set; } 
+        public int Id { get; set; }
+        public string Gugun { get; set; }
         public string Route_no { get; set; }
         public string Starting_point { get; set; }
         public string Transfer_point { get; set; }
@@ -37,6 +38,6 @@ namespace wp13_portfolio.Models
         public string First_bus_time { get; set; }
         public string Last_bus_time { get; set; }
         public string Bus_interval { get; set; }
-        public string Gugun { get; set; }
+        
     }
 }

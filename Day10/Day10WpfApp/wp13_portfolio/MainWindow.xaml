@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:wp13_portfolio"
     mc:Ignorable="d"
     Title="TownBus v1.0" Height="450" Width="800" MinHeight="385" MinWidth="645"
-    FontFamily="NanumGothic" >
+    FontFamily="NanumGothic" Loaded="MetroWindow_Loaded" >
 
     <Grid>
         <Grid.RowDefinitions>
@@ -20,39 +20,75 @@
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="0.6*"/>
             </Grid.ColumnDefinitions>
-            
-            <Label Grid.Column="0" Content="부산광역시 마을버스 운행 현황" FontSize="16" FontWeight="Bold" Margin="10"/>
-            
-            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+
+            <Label Grid.Column="0" Content="부산광역시 마을버스 운행 현황 정보" FontSize="16" FontWeight="Bold" Margin="10,16,128,4" Grid.ColumnSpan="2"/>
+
+            <ComboBox Grid.Column="2" x:Name="CboReqDate" Margin="52,5,24,5" Style="{StaticResource MahApps.Styles.ComboBox}"
+                          mah:TextBoxHelper.Watermark="구군 선택"
+                          mah:TextBoxHelper.UseFloatingWatermark="True"
+                          mah:TextBoxHelper.ClearTextButton="True" />
+
+
+            <Button Grid.Column="2" x:Name="BtnSearchBus" FontSize="14" Margin="245,10,20,10"
+                    Content="검색" Style="{StaticResource MahApps.Styles.Button.Square.Accent}" Click="BtnSearchBus_Click" Grid.ColumnSpan="2">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconModern Kind="Magnify" Margin="5"/>
+                            <TextBlock Text="{Binding}" Margin="5"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="51,0,0,0" Width="399" Grid.ColumnSpan="3" Grid.Column="1">
                 <Button x:Name="BtnReqRealtime" Content="마을버스조회" Width="100" Margin="5" Click="BtnReqRealtime_Click"/>
                 <Button x:Name="BtnSaveData" Content="저장" Width="60" Margin="5" Click="BtnSaveData_Click"/>
-                <TextBox Grid.Column="0" x:Name="TxtMovieName" FontSize="14" Margin="5,10"
-                     mah:TextBoxHelper.Watermark="검색할 마을버스명 입력"
-                     mah:TextBoxHelper.UseFloatingWatermark="True"
-                     mah:TextBoxHelper.ClearTextButton="True" 
-                     InputMethod.PreferredImeState="On"
-                     InputMethod.PreferredImeConversionMode="Native"
-                     KeyDown="TxtMovieName_KeyDown" />
+
                 <!--<ComboBox x:Name="CboReqDate" Width="150" Margin="5" 
                           mah:TextBoxHelper.Watermark="지역구 선택"
                           mah:TextBoxHelper.UseFloatingWatermark="True"
                           mah:TextBoxHelper.ClearTextButton="True" SelectionChanged="CboReqDate_SelectionChanged"  />-->
-                
+
             </StackPanel>
-            
+
         </Grid>
         <DataGrid Grid.Row="1" x:Name="GrdResult" Style="{StaticResource MahApps.Styles.DataGrid.Azure}" Margin="10"
                   IsReadOnly="True" ItemsSource="{Binding}" ></DataGrid>
-        
-        <StatusBar Grid.Row="2">
+
+        <DataGrid Grid.Row="1" Grid.Column="0" x:Name="GrdResults" Margin="5"
+                  IsReadOnly="True" Style="{StaticResource MahApps.Styles.DataGrid.Azure}"
+                  ItemsSource="{Binding}" AutoGenerateColumns="False">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Gugun}" Header="구군" FontWeight="Bold" />
+                <DataGridTextColumn Binding="{Binding Route_no}" Header="마을버스번호" />
+                <DataGridTextColumn Binding="{Binding Starting_point}" Header="기점" />
+                <DataGridTextColumn Binding="{Binding Transfer_point}" Header="경유" Width="110">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextAlignment" Value="Left"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding End_point}" Header="종점" />
+                <DataGridTextColumn Binding="{Binding First_bus_time}" Header="첫차" />
+                <DataGridTextColumn Binding="{Binding Last_bus_time}" Header="막차" />
+                <DataGridTextColumn Binding="{Binding Bus_interval}" Header="배차간격" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StatusBar Grid.Row="3">
             <StatusBarItem Content="부산광역시 마을버스앱"/>
             <Separator Style="{StaticResource MahApps.Styles.Separator.StatusBar}"/>
             <StatusBarItem x:Name="StsResult"/>
         </StatusBar>
     </Grid>
 
-    
+
 </mah:MetroWindow>

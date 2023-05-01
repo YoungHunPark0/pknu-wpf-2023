@@ -226,6 +226,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\FavoriteBusItem.cs" />
     <Compile Include="Models\Townbus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

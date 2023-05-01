@@ -96,3 +96,12 @@ src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/w
 
 <img
 src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/wpf07.gif" width="700">
+
+## 10일차
+- WPF 응용
+	- 개인 포트폴리오 개발
+	
+10일차 부산광역시 마을버스 운행 현황 정보 앱 완료 
+
+<img
+src="https://raw.githubusercontent.com/YoungHunPark0/pknu-wpf-2023/main/images/wpf08.gif" width="700">

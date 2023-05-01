@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using System.Windows;
 using Application = System.Windows.Application;
+using MySqlConnector;
 
 namespace wp13_portfolio.Logics
 {

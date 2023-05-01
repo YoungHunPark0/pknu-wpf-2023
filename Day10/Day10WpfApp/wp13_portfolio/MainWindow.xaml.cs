@@ -32,10 +32,32 @@ namespace wp13_portfolio
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        bool isFavorite = false; // false -> openApi 검색해온결과, true => 즐겨찾기 보기
         public MainWindow()
         {
             InitializeComponent();
+            CboReqDate.ItemsSource = gulist;
         }
+
+        public List<string> gulist = new List<string>()
+        {
+            "부산광역시 강서구",
+            "부산광역시 금정구",
+            "부산광역시 기장군",
+            "부산광역시 남구",
+            "부산광역시 동구",
+            "부산광역시 동래구",
+            "부산광역시 부산진구",
+            "부산광역시 북구",
+            "부산광역시 사상구",
+            "부산광역시 사하구",
+            "부산광역시 서구",
+            "부산광역시 수영구",
+            "연제구",
+            "부산광역시 영도구",
+            "부산광역시 중구",
+            "부산광역시 해운대구"
+        };
 
         private async void BtnReqRealtime_Click(object sender, RoutedEventArgs e)
         {
@@ -77,14 +99,14 @@ namespace wp13_portfolio
                         townbus.Add(new Townbus
                         {
                             Id = 0,
+                            Gugun = Convert.ToString(sensor["gugun"]),
                             Route_no = Convert.ToString(sensor["route_no"]), // openAPI
                             Starting_point = Convert.ToString(sensor["starting_point"]),
                             Transfer_point = Convert.ToString(sensor["transfer_point"]),
                             End_point = Convert.ToString(sensor["end_point"]),
                             First_bus_time = Convert.ToString(sensor["first_bus_time"]),
                             Last_bus_time = Convert.ToString(sensor["last_bus_time"]),
-                            Bus_interval = Convert.ToString(sensor["bus_interval"]),
-                            Gugun = Convert.ToString(sensor["gugun"])
+                            Bus_interval = Convert.ToString(sensor["bus_interval"])
                         });
                     }
 
@@ -113,24 +135,26 @@ namespace wp13_portfolio
                     if (conn.State == System.Data.ConnectionState.Closed) conn.Open(); // db는 똑같음 외우기 
                     var query = @"INSERT INTO townbus
                                             (
+                                            gugun,
                                             route_no,
                                             starting_point,
                                             transfer_point,
                                             end_point,
                                             first_bus_time,
                                             last_bus_time,
-                                            bus_interval,
-                                            gugun)
+                                            bus_interval
+                                            )
                                         VALUES
                                             (
+                                            @gugun,
                                             @route_no,
                                             @starting_point,
                                             @transfer_point,
                                             @end_point,
                                             @first_bus_time,
                                             @last_bus_time,
-                                            @bus_interval,
-                                            @gugun)";
+                                            @bus_interval
+                                            )";
                     // workbench가서 `,{< 없애고 @추가, id는 뺴고(id는 ai체크 자동추가여서) 들고오기
                     var insRes = 0;
                     foreach (var temp in GrdResult.Items)
@@ -140,6 +164,7 @@ namespace wp13_portfolio
                             var item = temp as Townbus;
 
                             MySqlCommand cmd = new MySqlCommand(query, conn);
+                            cmd.Parameters.AddWithValue("@gugun", item.Gugun);
                             cmd.Parameters.AddWithValue("@route_no", item.Route_no);
                             cmd.Parameters.AddWithValue("@starting_point", item.Starting_point);
                             cmd.Parameters.AddWithValue("@transfer_point", item.Transfer_point);
@@ -147,7 +172,7 @@ namespace wp13_portfolio
                             cmd.Parameters.AddWithValue("@first_bus_time", item.First_bus_time);
                             cmd.Parameters.AddWithValue("@last_bus_time", item.Last_bus_time);
                             cmd.Parameters.AddWithValue("@bus_interval", item.Bus_interval);
-                            cmd.Parameters.AddWithValue("@gugun", item.Gugun);
+                            
 
                             insRes += cmd.ExecuteNonQuery();
                         }
@@ -162,50 +187,51 @@ namespace wp13_portfolio
                 await Commons.ShowMessageAsync("오류", $"DB저장 오류! {ex.Message}");
             }
         }
-             
-               
-        private void TxtReqSer_SelectionChanged(object sender, RoutedEventArgs e)
+
+        public void SearchBus(string busName)
         {
-            if (TxtReqSer.SelectedValue != null)
+            if (CboReqDate.SelectedValue != null)
             {
-                //MessageBox.Show(CboReqDate.SelectedValue.ToString());
+                // MessageBox.Show(CboReqDate.SelectedValue.ToString());
                 using (MySqlConnection conn = new MySqlConnection(Commons.myConnString))
                 {
                     conn.Open();
-                    var query = @"SELECT 
-                                        route_no,
-                                        starting_point,
-                                        transfer_point,
-                                        end_point,
-                                        first_bus_time,
-                                        last_bus_time,
-                                        bus_interval,
-                                        gugun
-                                    FROM townbus";
+                    var query = $@"SELECT Id,
+                                         Gugun,
+                                         Route_no,
+                                         Starting_point,
+                                         Transfer_point,
+                                         End_point,
+                                         First_bus_time,
+                                         Last_bus_time,
+                                         Bus_interval
+                                    FROM townbus
+                                    WHERE Gugun LIKE '%{busName}%'";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@route_no", CboReqDate.SelectedValue.ToString());
+
                     MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
                     DataSet ds = new DataSet();
                     adapter.Fill(ds, "townbus");
-                    List<Townbus> townbus = new List<Townbus>();
+                    List<Townbus> townbuss = new List<Townbus>();
                     foreach (DataRow row in ds.Tables["townbus"].Rows)
                     {
-                        townbus.Add(new Townbus
+                        townbuss.Add(new Townbus
                         {
-                            Id = Convert.ToInt32(row["ID"]),
-                            Route_no = Convert.ToString(row["dev_id"]),
-                            Starting_point = Convert.ToString(row["name"]),
-                            Transfer_point = Convert.ToString(row["loc"]),
-                            End_point = Convert.ToString(row["coordx"]),
-                            First_bus_time = Convert.ToString(row["coordy"]),
-                            Last_bus_time = Convert.ToString(row["ison"]),
-                            Bus_interval = Convert.ToString(row["pm25_after"]),
-                            Gugun = Convert.ToString(row["state"])
+                            Id = Convert.ToInt32(row["id"]),
+                            Gugun = Convert.ToString(row["gugun"]),
+                            Route_no = Convert.ToString(row["route_no"]),
+                            Starting_point = Convert.ToString(row["starting_point"]),
+                            Transfer_point = Convert.ToString(row["transfer_point"]),
+                            End_point = Convert.ToString(row["end_point"]),
+                            First_bus_time = Convert.ToString(row["first_bus_time"]),
+                            Last_bus_time = Convert.ToString(row["last_bus_time"]),
+                            Bus_interval = Convert.ToString(row["bus_interval"])
+                            
                         });
                     }
 
-                    this.DataContext = townbus;
-                    StsResult.Content = $"DB {townbus.Count}건 조회완료";
+                    this.DataContext = townbuss;
+                    StsResult.Content = $"DB {townbuss.Count}건 조회완료";
                 }
             }
             else
@@ -215,17 +241,279 @@ namespace wp13_portfolio
             }
         }
 
-        private void TxtMovieName_KeyDown(object sender, KeyEventArgs e)
+        private async void BtnSearchBus_Click(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (string.IsNullOrEmpty(CboReqDate.SelectedValue.ToString()))
             {
-                BtnSearchMovie_Click(sender, e);
+                await Commons.ShowMessageAsync("검색", "검색할 구군명 입력하세요.");
+                return;
+            }
+
+            //if (TxtMovieName.Text.Length <= 2)
+            //{
+            //    await Commons.ShowMessageAsync("검색", "검색어를 2자이상 입력하세요.");
+            //    return;
+            //}
+
+            try
+            {
+                SearchBus(CboReqDate.SelectedValue.ToString());
+            }
+            catch (Exception ex)
+            {
+                await Commons.ShowMessageAsync("오류", $"오류발생 : {ex.Message}");
             }
         }
 
-        private void BtnSearchMovie_Click(object sender, RoutedEventArgs e)
+                
+        private async void BtnAddFavorite_Click(object sender, RoutedEventArgs e)
         {
+            if (GrdResult.SelectedItems.Count == 0)
+            {
+                await Commons.ShowMessageAsync("오류", "즐겨찾기에 추가할 마을버스를 선택하세요(복수선택 가능)");
+                return;
+            }
 
+            if (isFavorite)
+            {
+                await Commons.ShowMessageAsync("오류", "이미 즐겨찾기한 마을버스 입니다");
+                return;
+            }
+            
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(Commons.myConnString))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    var query = @"INSERT INTO townbus
+                                                (Gugun,
+                                                Route_no,
+                                                Starting_point,
+                                                Transfer_point,
+                                                End_point,
+                                                First_bus_time,
+                                                Last_bus_time,
+                                                Bus_interval
+                                               )
+                                       VALUES
+                                                (@Gugun,
+                                                @Route_no,
+                                                @Starting_point,
+                                                @Transfer_point,
+                                                @End_point,
+                                                @First_bus_time,
+                                                @Last_bus_time,
+                                                @Bus_interval
+                                                )";
+
+                    foreach (Townbus item in GrdResult.SelectedItems)
+                    {
+                        var cmd = new MySqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@Gugun", item.Gugun);
+                        cmd.Parameters.AddWithValue("@Route_no", item.Route_no);
+                        cmd.Parameters.AddWithValue("@Starting_point", item.Starting_point);
+                        cmd.Parameters.AddWithValue("@Transfer_point", item.Transfer_point);
+                        cmd.Parameters.AddWithValue("@End_point", item.End_point);
+                        cmd.Parameters.AddWithValue("@First_bus_time", item.First_bus_time);
+                        cmd.Parameters.AddWithValue("@Last_bus_time", item.Last_bus_time);
+                        cmd.Parameters.AddWithValue("@Bus_interval", item.Bus_interval);
+                        
+                        cmd.ExecuteNonQuery();
+                    }
+                    
+                }
+                await Commons.ShowMessageAsync("성공", $"DB저장 성공");
+            }
+            catch (Exception ex)
+            {
+                await Commons.ShowMessageAsync("오류", $"DB조회 오류 {ex.Message}");
+            }
         }
+
+        private async void BtnViewFavorite_Click(object sender, RoutedEventArgs e)
+        {
+            this.DataContext = null;
+            CboReqDate.Text = string.Empty;
+
+            List<FavoriteBusItem> list = new List<FavoriteBusItem>();
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(Commons.myConnString))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    var query = @"SELECT Id,
+                                         Gugun,
+                                         Route_no,
+                                         Starting_point,
+                                         Transfer_point,
+                                         End_point,
+                                         First_bus_time,
+                                         Last_bus_time,
+                                         Bus_interval
+                                    FROM townbus
+                                 ORDER BY Gugun ASC";
+                    var cmd = new MySqlCommand(query, conn);
+                    var adapter = new MySqlDataAdapter(cmd);
+                    var dSet = new DataSet();
+                    adapter.Fill(dSet, "FavoriteBusItem");
+
+                    foreach (DataRow dr in dSet.Tables["FavoriteBusItem"].Rows)
+                    {
+                        list.Add(new FavoriteBusItem
+                        {
+                            Id = Convert.ToInt32(dr["id"]),
+                            Gugun = Convert.ToString(dr["gugun"]),
+                            Route_no = Convert.ToString(dr["route_no"]),
+                            Starting_point = Convert.ToString(dr["starting_point"]),
+                            Transfer_point = Convert.ToString(dr["transfer_point"]),
+                            End_point = Convert.ToString(dr["end_point"]),
+                            First_bus_time = Convert.ToString(dr["first_bus_time"]),
+                            Last_bus_time = Convert.ToString(dr["last_bus_time"]),
+                            Bus_interval = Convert.ToString(dr["bus_interval"])
+                        });
+                    }
+
+                    this.DataContext = list;
+                    isFavorite = true; // 즐겨찾기에서 가져온 내용
+                    StsResult.Content = $"즐겨찾기 {list.Count} 건 조회완료";
+                }
+            }
+            catch (Exception ex)
+            {
+                await Commons.ShowMessageAsync("오류", $"DB조회 오류 {ex.Message}");
+            }
+        }
+
+        private async void BtnDelFavorite_Click(object sender, RoutedEventArgs e)
+        {
+            if (isFavorite == false)
+            {
+                await Commons.ShowMessageAsync("오류", "즐겨찾기만 삭제할 수 있습니다.");
+                return;
+            }
+
+            if (GrdResult.SelectedItems.Count == 0)
+            {
+                await Commons.ShowMessageAsync("오류", "삭제할 마을버스를 선택하세요.");
+                return;
+            }
+
+            try // 삭제
+            {
+                using (SqlConnection conn = new SqlConnection(Commons.myConnString))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    var query = "DELETE FROM FavoriteMovieItem WHERE Id = @Id";
+                    var delRes = 0;
+
+                    foreach (FavoriteBusItem item in GrdResult.SelectedItems)
+                    {
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@Id", item.Id);
+
+                        delRes += cmd.ExecuteNonQuery();
+                    }
+
+                    if (delRes == GrdResult.SelectedItems.Count)
+                    {
+                        await Commons.ShowMessageAsync("삭제", "DB삭제성공!!");
+                        StsResult.Content = $"즐겨찾기 {delRes} 건 삭제완료"; // 화면에 안나옴. 어차피 삭제시 바로 조회해서
+                    }
+                    else
+                    {
+                        await Commons.ShowMessageAsync("삭제", "DB삭제 일부성공!!"); // 발생할일이 거의 전무
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await Commons.ShowMessageAsync("오류", $"DB삭제 오류 {ex.Message}");
+            }
+
+            BtnViewFavorite_Click(sender, e); // 즐겨찾기 보기 이벤트핸들러를 한번 실행
+        }
+
+        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // 콤보박스에 들어갈 날짜를 DB에서 불러와서
+            // 저장한 뒤에도 콤보박스를 재조회해야 날짜전부 출력
+            using (MySqlConnection conn = new MySqlConnection(Commons.myConnString))
+            {
+                conn.Open();
+                var query = @"SELECT Gugun AS Save_Date
+                                FROM townbus
+                               GROUP BY 1
+                               ORDER BY 1";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds);
+                List<string> saveDateList = new List<string>();
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    saveDateList.Add(Convert.ToString(row["Save_Date"]));
+                }
+
+                CboReqDate.ItemsSource = saveDateList;
+            }
+        }
+
+        
+
+
+
+        //private void CboReqDate_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    if (CboReqDate.SelectedValue != null)
+        //    {
+        //        // MessageBox.Show(CboReqDate.SelectedValue.ToString());
+        //        using (MySqlConnection conn = new MySqlConnection(Commons.myConnString))
+        //        {
+        //            conn.Open();
+        //            var query = @"SELECT Id,
+        //                                 Route_no,
+        //                                 Starting_point,
+        //                                 Transfer_point,
+        //                                 End_point,
+        //                                 First_bus_time,
+        //                                 Last_bus_time,
+        //                                 Bus_interval,
+        //                                 Gugun
+        //                            FROM townbus";
+        //            MySqlCommand cmd = new MySqlCommand(query, conn);
+
+        //            MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+        //            DataSet ds = new DataSet();
+        //            adapter.Fill(ds, "townbus");
+        //            List<Townbus> townbuss = new List<Townbus>();
+        //            foreach (DataRow row in ds.Tables["townbus"].Rows)
+        //            {
+        //                townbuss.Add(new Townbus
+        //                {
+        //                    Id = Convert.ToInt32(row["id"]),
+        //                    Route_no = Convert.ToString(row["route_no"]),
+        //                    Starting_point = Convert.ToString(row["starting_point"]),
+        //                    Transfer_point = Convert.ToString(row["transfer_point"]),
+        //                    End_point = Convert.ToString(row["end_point"]),
+        //                    First_bus_time = Convert.ToString(row["first_bus_time"]),
+        //                    Last_bus_time = Convert.ToString(row["last_bus_time"]),
+        //                    Bus_interval = Convert.ToString(row["bus_interval"]),
+        //                    Gugun = Convert.ToString(row["gugun"]),
+        //                });
+        //            }
+
+        //            this.DataContext = townbuss;
+        //            StsResult.Content = $"DB {townbuss.Count}건 조회완료";
+        //        }
+        //    }
+        //    else
+        //    {
+        //        this.DataContext = null;
+        //        StsResult.Content = $"DB 조회클리어";
+        //    }
+        //}
     }
 }
