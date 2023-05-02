@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:wp13_portfolio"
     mc:Ignorable="d"
     Title="TownBus v1.0" Height="450" Width="800" MinHeight="385" MinWidth="645"
-    FontFamily="NanumGothic" Loaded="MetroWindow_Loaded" >
+    FontFamily="NanumGothic"  >
 
     <Grid>
         <Grid.RowDefinitions>

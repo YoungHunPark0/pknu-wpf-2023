@@ -8,7 +8,7 @@ namespace wp13_portfolio.Models
 {
     public class FavoriteBusItem
     {
-        public int Id { get; set; }
+        
         public string Gugun { get; set; }
         public string Route_no { get; set; }
         public string Starting_point { get; set; }

@@ -29,7 +29,7 @@ namespace wp13_portfolio.Models
         "child_cash_fare": "300",
         "gugun": "연제구",
         "reference_date": "2022-12-31" */
-        public int Id { get; set; }
+        
         public string Gugun { get; set; }
         public string Route_no { get; set; }
         public string Starting_point { get; set; }
