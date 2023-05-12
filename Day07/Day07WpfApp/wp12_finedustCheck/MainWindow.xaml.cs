@@ -241,8 +241,8 @@ namespace wp12_finedustCheck
                                 FROM dustsensor
                                GROUP BY 1
                                ORDER BY 1";
-                MySqlCommand cmd = new MySqlCommand(query, conn);
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                MySqlCommand cmd = new MySqlCommand(query, conn); // 쿼리문 날린거
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd); // 데이터 가져오는거
                 DataSet ds = new DataSet();
                 adapter.Fill(ds);
                 List<string> saveDateList = new List<string>();
